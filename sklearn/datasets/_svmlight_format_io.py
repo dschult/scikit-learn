@@ -431,8 +431,8 @@ def _dump_svmlight(X, y, f, multilabel, one_based, comment, query_id):
     if not multilabel and not y_is_sp:
         y = y[:, np.newaxis]
     if X_is_sp:
-        X.indices = X.indices.astype(np.int32)
-        X.indptr = X.indptr.astype(np.int32)
+        X.indices = X.indices.astype(np.int32, copy=False)
+        X.indptr = X.indptr.astype(np.int32, copy=False)
     _dump_svmlight_file(
         X,
         y,

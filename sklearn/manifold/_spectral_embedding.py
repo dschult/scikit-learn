@@ -335,7 +335,17 @@ def _spectral_embedding(
     )
     if sparse.issparse(laplacian):
         index_dtype = np.int32 if n_nodes < np.iinfo(np.int32).max else np.int64
-        laplacian.coords = tuple(co.astype(index_dtype) for co in laplacian.coords)
+        # can remove this check after SciPy 1.12 is lowest supported SciPy
+        if hasattr(laplacian, "coords"):
+            laplacian.coords = tuple(
+                co.astype(index_dtype, copy=False) for co in laplacian.coords
+            )
+        elif hasattr(laplacian, "indices"):
+            laplacian.indices = tuple(
+                co.astype(index_dtype, copy=False) for co in laplacian.indices
+            )
+        else:
+            raise TypeError("SciPy sparse COO must have attr 'coords' or 'indices'")
     if eigen_solver == "arpack" or (
         eigen_solver != "lobpcg"
         and (not sparse.issparse(laplacian) or n_nodes < 5 * n_components)

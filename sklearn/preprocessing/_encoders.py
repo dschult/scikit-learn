@@ -1070,7 +1070,7 @@ class OneHotEncoder(_BaseEncoder):
 
         index_dtype = np.int32 if n_samples + 1 < np.iinfo(np.int32).max else np.int64
         indptr = np.empty(n_samples + 1, dtype=index_dtype)
-        indices = indices.astype(index_dtype)
+        indices = indices.astype(index_dtype, copy=False)
         indptr[0] = 0
         np.sum(X_mask, axis=1, out=indptr[1:], dtype=indptr.dtype)
         np.cumsum(indptr[1:], out=indptr[1:])

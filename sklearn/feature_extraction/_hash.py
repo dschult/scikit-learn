@@ -190,8 +190,8 @@ class FeatureHasher(TransformerMixin, BaseEstimator):
             raise ValueError("Cannot vectorize empty sequence.")
 
         if max(n_samples, self.n_features) < np.iinfo(np.int32).max:
-            indices = indices.astype(np.int32)
-            indptr = indptr.astype(np.int32)
+            indices = indices.astype(np.int32, copy=False)
+            indptr = indptr.astype(np.int32, copy=False)
         X = sp.csr_matrix(
             (values, indices, indptr),
             dtype=self.dtype,
