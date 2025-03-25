@@ -119,9 +119,10 @@ def _to_graph(
         weights = np.ones(edges.shape[1], dtype=dtype)
         diag = np.ones(n_voxels, dtype=dtype)
 
-    diag_idx = np.arange(n_voxels)
-    i_idx = np.hstack((edges[0], edges[1]))
-    j_idx = np.hstack((edges[1], edges[0]))
+    index_dtype = np.int32 if n_voxels < np.iinfo(np.int32).max else np.int64
+    diag_idx = np.arange(n_voxels, dtype=index_dtype)
+    i_idx = np.hstack((edges[0], edges[1]), dtype=index_dtype)
+    j_idx = np.hstack((edges[1], edges[0]), dtype=index_dtype)
     graph = sparse.coo_matrix(
         (
             np.hstack((weights, weights, diag)),

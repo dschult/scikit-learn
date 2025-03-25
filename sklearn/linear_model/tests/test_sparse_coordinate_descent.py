@@ -21,7 +21,7 @@ def test_sparse_coef():
     clf.coef_ = [1, 2, 3]
 
     assert sp.issparse(clf.sparse_coef_)
-    assert clf.sparse_coef_.toarray().tolist()[0] == clf.coef_
+    assert_allclose(clf.sparse_coef_.toarray().ravel(), clf.coef_)
 
 
 @pytest.mark.parametrize("csc_container", CSC_CONTAINERS)

@@ -1068,7 +1068,9 @@ class OneHotEncoder(_BaseEncoder):
         feature_indices = np.cumsum([0] + self._n_features_outs)
         indices = (X_int + feature_indices[:-1]).ravel()[mask]
 
-        indptr = np.empty(n_samples + 1, dtype=int)
+        index_dtype = np.int32 if n_samples + 1 < np.iinfo(np.int32).max else np.int64
+        indptr = np.empty(n_samples + 1, dtype=index_dtype)
+        indices = indices.astype(index_dtype)
         indptr[0] = 0
         np.sum(X_mask, axis=1, out=indptr[1:], dtype=indptr.dtype)
         np.cumsum(indptr[1:], out=indptr[1:])

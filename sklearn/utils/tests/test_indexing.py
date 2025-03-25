@@ -4,6 +4,7 @@ from unittest import SkipTest
 
 import numpy as np
 import pytest
+from scipy import sparse
 from scipy.stats import kstest
 
 import sklearn
@@ -288,7 +289,7 @@ def test_safe_indexing_2d_scalar_axis_1(array_type, expected_output_type, indice
     else:
         subset = _safe_indexing(array, indices, axis=1)
         expected_output = [3, 6, 9]
-        if expected_output_type == "sparse":
+        if expected_output_type == "sparse" and sparse.isspmatrix(array):
             # sparse matrix are keeping the 2D shape
             expected_output = [[3], [6], [9]]
         expected_array = _convert_container(expected_output, expected_output_type)

@@ -267,6 +267,7 @@ class DictVectorizer(TransformerMixin, BaseEstimator):
             raise ValueError("Sample sequence X is empty.")
 
         indices = np.frombuffer(indices, dtype=np.intc)
+        indptr = np.asarray(indptr, dtype=np.intc)
         shape = (len(indptr) - 1, len(vocab))
 
         result_matrix = sp.csr_matrix(

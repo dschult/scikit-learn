@@ -534,6 +534,8 @@ def test_iterative_imputer_one_feature(X):
 def test_imputation_pipeline_grid_search():
     # Test imputation within a pipeline + gridsearch.
     X = _sparse_random_matrix(100, 100, density=0.10)
+    X.indices = X.indices.astype(np.int32)
+    X.indptr = X.indptr.astype(np.int32)
     missing_values = X.data[0]
 
     pipeline = Pipeline(

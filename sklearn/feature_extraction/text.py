@@ -1447,7 +1447,7 @@ class CountVectorizer(_VectorizerMixin, BaseEstimator):
 
         if sp.issparse(X):
             return [
-                inverse_vocabulary[X[i, :].nonzero()[1]].ravel()
+                inverse_vocabulary[X[[i], :].nonzero()[1]].ravel()
                 for i in range(n_samples)
             ]
         else:

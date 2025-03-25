@@ -140,7 +140,7 @@ def test_as_float_array():
 
     # Test the copy parameter with some matrices
     matrices = [
-        sp.csc_matrix(np.arange(5)).toarray(),
+        sp.csc_matrix([np.arange(5)]).toarray(),
         _sparse_random_matrix(10, 10, density=0.10).toarray(),
     ]
     for M in matrices:

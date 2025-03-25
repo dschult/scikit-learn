@@ -1052,8 +1052,10 @@ def test_fetch_openml_auto_mode(monkeypatch, data_id, data_type):
 
     _monkey_patch_webbased_functions(monkeypatch, data_id, True)
     data = fetch_openml(data_id=data_id, as_frame="auto", cache=False)
-    klass = pd.DataFrame if data_type == "dataframe" else scipy.sparse.csr_matrix
-    assert isinstance(data.data, klass)
+    if data_type == "dataframe":
+        assert isinstance(data.data, pd.DataFrame)
+    else:
+        assert scipy.sparse.issparse(data.data)
 
 
 def test_convert_arff_data_dataframe_warning_low_memory_pandas(monkeypatch):
