@@ -453,17 +453,22 @@ class LabelPropagation(BaseLabelPropagation):
         )
 
     def _build_graph(self):
-        """Matrix representing a fully connected graph between each sample
-
-        This basic implementation creates a non-stochastic affinity matrix, so
-        class distributions will exceed 1 (normalization may be desired).
-        """
+        """Matrix representing a fully connected graph between each sample."""
         if self.kernel == "knn":
             self.nn_fit = None
         affinity_matrix = self._get_kernel(self.X_)
-        normalizer = affinity_matrix.sum(axis=0)
+        # sum of rows (i.e., sum along columns) will be normalized to 1
+        normalizer = affinity_matrix.sum(axis=1)
         if sparse.issparse(affinity_matrix):
-            affinity_matrix.data /= np.diag(np.array(normalizer))
+            if normalizer.ndim == 2:
+                # np.matrix instead of 1D np.ndarray: make 1D
+                normalizer = np.ravel(normalizer)
+            if affinity_matrix.format == "csr":
+                repeated_cols = np.diff(affinity_matrix.indptr)
+                rows = np.repeat(np.arange(affinity_matrix.shape[0]), repeated_cols)
+            else:  # support for CSC format
+                rows = affinity_matrix.indices
+            affinity_matrix.data /= normalizer[rows]
         else:
             affinity_matrix /= normalizer[:, np.newaxis]
         return affinity_matrix
